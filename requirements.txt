@@ -19,7 +19,7 @@ marshmallow==3.23.3
 packaging==24.2
 pillow==11.1.0
 psycopg2==2.9.10
-python-decouple==3.8
+# python-decouple==3.8
 python-dotenv==1.0.1
 requests==2.32.3
 shortuuid==1.0.13
