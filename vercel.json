@@ -1,0 +1,22 @@
+{
+    "version": 2,
+    "builds": [
+      {
+        "src": "manage.py",
+        "use": "@vercel/python"
+      }
+    ],
+    "installCommand": "python3 -m pip install -r requirements.txt",  
+    "buildCommand": "python3 manage.py collectstatic --noinput && python3 manage.py migrate",
+    "env": {
+      "DJANGO_SECRET_KEY": "@django_secret_key",
+      "DATABASE_URL": "@database_url"
+    },
+    "routes": [
+      {
+        "src": "/(.*)",
+        "dest": "your_project_name.wsgi"
+      }
+    ]
+  }
+  
