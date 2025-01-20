@@ -9,7 +9,7 @@
     "installCommand": "python3 -m pip install -r requirements.txt",  
     "buildCommand": "python3 manage.py collectstatic --noinput && python3 manage.py migrate",
     "env": {
-      "DJANGO_SECRET_KEY": "@django_secret_key",
+      "SECRET_KEY": "@secret_key",
       "DATABASE_URL": "@database_url"
     },
     "routes": [
