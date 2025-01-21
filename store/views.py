@@ -5,6 +5,7 @@ from plugin.service_fee import calculate_service_fee
 from plugin.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 from store import models as store_models
 from customer import models as customer_models
+from vendor import models as vendor_models
 from django.contrib import messages
 from django.db.models import Q, Avg, Sum
 from decimal import Decimal
@@ -16,6 +17,9 @@ from django.views.decorators.csrf import csrf_exempt
 import requests
 import stripe
 stripe.api_key = settings.STRIPE_SECRET_KEY
+from django.core.mail import EmailMultiAlternatives
+from django.template.loader import render_to_string
+
 
 # Create your views here.
 
@@ -472,12 +476,49 @@ def stripe_payment_verify(request, order_id):
             clear_cart_items(request)
             
             #send email to customer
+            customer_merge_data = {
+                "order" : order,
+                "order_items" : order.order_item()
+            }
+            subject= f"New Order"
+            text_body = render_to_string("email/order/customer/customer_new_order.html",customer_merge_data)
+            html_body = render_to_string("email/order/customer/customer_new_order.txt",customer_merge_data)
+            
+            msg = EmailMultiAlternatives(
+                subject=subject,
+                from_email=settings.FROM_EMAIL,
+                to=[order.address.email], body=text_body
+            )
+            msg.attach_alternative(html_body, "text/html")
+            msg.send()
+            customer_models.Notification.create(type="New Order", user=request.user)
             
             #send email to vendor
+            for item in order.order_item:
+                vendor_merge_data = {
+                    "item": item
+                }
+                try:
+                    
+                    subject= f"New Order"
+                    text_body = render_to_string("email/order/vendor/vendor_new_order.html",vendor_merge_data)
+                    html_body = render_to_string("email/order/vendor/vendor_new_order.txt",vendor_merge_data)
+                    
+                    msg = EmailMultiAlternatives(
+                        subject=subject,
+                        from_email=settings.FROM_EMAIL,
+                        to=[item.vendor.email], body=text_body
+                    )
+                    msg.attach_alternative(html_body, "text/html")
+                    msg.send()
+                    
+                    vendor_models.Notification.create(type="New Order", user=item.vendor, order=item)
+                except:
+                    pass
             
             #send inApp notification
             
-            return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+        return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
     return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
 
           
@@ -516,27 +557,43 @@ def flutterwave_payment_verify(request,order_id):
     
     # if tx_ref:
     headers = {
-        "Authorization": f"Bearer {settings.PAYSTACK_PRIVATE_KEY}",
+        "Authorization": f"Bearer {settings.FLUTTERWAVE_PRIVATE_KEY}",
         "Content-Type": "application/json"
     }
     
-    response = requests.get(f"https://api.flutterwave.com/v3/transactions/verify_by_reference?{tx_ref}", headers=headers)
+    response = requests.get(f"https://api.flutterwave.com/v3/transactions/verify_by_reference?tx_ref={tx_ref}", headers=headers)
     
-    response_data = response.json
+    response_data = response.json()
     
     if response_data["data"]["status"] == "successful":
-            if order.payment_status == "Processing":
-                order.payment_status = "Paid"
-                order.save()
-                clear_cart_items(request)
-                
-                #send email to customer
-                
-                #send email to vendor
-                
-                #send inApp notification
-                return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+        if order.payment_status == "Processing":
+            order.payment_status = "Paid"
+            order.save()
+            clear_cart_items(request)
+            
+            #send email to customer
+            
+            #send email to vendor
+            
+            #send inApp notification
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
             
     return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
+
+# @csrf_exempt
+# def razorpay_payment_verify(request, order_id):
+#     order = store_models.Order.objects.get(order_id=order_id)
+#     payment_method = request.GET.get("payment_method")
+    
+#     if request.method == "POST":
+#         data = request.POST
         
+#         razorpay_order_id  = data.get("razorpay_order_id")    
+#         razorpay_payment_id  = data.get("razorpay_payment_id")    
+#         razorpay_signature  = data.get("razorpay_signature")    
         
+#         params_dict = {
+#             "razorpay_order_id":razorpay_order_id,
+#             "razorpay_payment_id":razorpay_payment_id,
+#             "razorpay_signature":razorpay_signature,
+#         }

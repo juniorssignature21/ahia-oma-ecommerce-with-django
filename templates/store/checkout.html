@@ -262,12 +262,12 @@
                             </button>
                             
                         </div>
-                        <form action="" method="post">
-
+                        <form action="https://checkout.flutterwave.com/v3/hosted/pay" method="POST">
+                            {% csrf_token %}
                         <div class="mb-3">
                             
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
                                 name="public_key"
                                 id="inputName"
@@ -276,37 +276,31 @@
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
-                                name="customer['email']"
+                                name="customer[email]"
                                 id="inputName"
                                 placeholder=""
                                 value="{{order.address.email}}"
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
-                                name="customer['name']"
+                                name="customer[name]"
                                 id="inputName"
                                 placeholder=""
                                 value="{{order.address.first_name}} {{order.address.last_name}}"
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
                                 name="tx_ref"
                                 id="inputName"
@@ -315,11 +309,9 @@
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
                                 name="amount"
                                 id="inputName"
@@ -328,11 +320,9 @@
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
                                 name="currency"
                                 id="inputName"
@@ -341,19 +331,21 @@
                             />
                         </div>
                         <div class="mb-3">
-                            <label class="visually-hidden" for="inputName"
-                                >Hidden input label</label
-                            >
+                            
                             <input
-                                type="text"
+                                type="hidden"
                                 class="form-control"
                                 name="redirect_url"
                                 id="inputName"
                                 placeholder=""
-                                value="https://y/flutterwave_payment_verify/{{order.order_id}}/payment_method=Flutterwave"
+                                value="https://53a8-102-90-82-223.ngrok-free.app/flutterwave_payment_verify/{{order.order_id}}/?payment_method=Flutterwave"
                             />
                         </div>
-                        <button type="submit">
+                        <button
+                         type="submit"
+                        class="btn btn-primary w-100 h-80 rounded text-light  fw-bold"
+                        
+                        >
                             FlutterWave
                         </button>
                     </form>

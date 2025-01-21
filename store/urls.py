@@ -17,5 +17,6 @@ urlpatterns = [
     path("stripe_payment/<order_id>/", views.stripe_payment, name="stripe_payment"),
     path("stripe_payment_verify/<order_id>/", views.stripe_payment_verify, name="stripe_payment_verify"),
     path("paystack_payment_verify/<order_id>/", views.paystack_payment_verify, name="paystack_payment_verify"),
+    path("flutterwave_payment_verify/<order_id>/", views.flutterwave_payment_verify, name="flutterwave_payment_verify"),
     
 ]
