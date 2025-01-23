@@ -51,11 +51,15 @@
             <div class="col-lg-6 text-center text-lg-right">
                 <div class="d-inline-flex align-items-center">
                     <div class="btn-group">
-                        <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">My Account</button>
-                        <div class="dropdown-menu dropdown-menu-right">
+                        {% if user.is_authenticated %}
+                        <a href="{% url "userauths:logout_user" %}" class="btn btn-sm btn-light dropdown-toggle">Logout</a>
+                        {% else %}
+                        <a href="{% url "userauths:login_user" %}" class="btn btn-sm btn-light dropdown-toggle">Sign in</a>
+                        {% endif %}
+                        {% comment %} <div class="dropdown-menu dropdown-menu-right">
                             <button class="dropdown-item" type="button">Sign in</button>
-                            <button class="dropdown-item" type="button">Sign up</button>
-                        </div>
+                            <a class="dropdown-item" href="{% url "userauths:sign_up" %}">Sign up</a>
+                        </div> {% endcomment %}
                     </div>
                     <div class="btn-group mx-2">
                         <button type="button" class="btn btn-sm btn-light dropdown-toggle" data-toggle="dropdown">USD</button>

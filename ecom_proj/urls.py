@@ -25,6 +25,7 @@ urlpatterns = [
     path("ckeditor5/", include("django_ckeditor_5.urls")),
     
     path('', include("store.urls")),
+    path('user-auth/', include("userauths.urls")),
 ]
 urlpatterns += static(settings.MEDIA_URL, document_root=settings.MEDIA_ROOT)
 urlpatterns += static(settings.STATIC_URL, document_root=settings.STATIC_ROOT)

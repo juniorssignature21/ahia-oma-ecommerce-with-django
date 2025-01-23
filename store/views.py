@@ -484,17 +484,23 @@ def stripe_payment_verify(request, order_id):
             text_body = render_to_string("email/order/customer/customer_new_order.html",customer_merge_data)
             html_body = render_to_string("email/order/customer/customer_new_order.txt",customer_merge_data)
             
-            msg = EmailMultiAlternatives(
-                subject=subject,
-                from_email=settings.FROM_EMAIL,
-                to=[order.address.email], body=text_body
-            )
-            msg.attach_alternative(html_body, "text/html")
-            msg.send()
-            customer_models.Notification.create(type="New Order", user=request.user)
+            try:
+                msg = EmailMultiAlternatives(
+                    subject=subject,
+                    from_email=settings.FROM_EMAIL,
+                    to=[order.address.email], body=text_body
+                )
+                msg.attach_alternative(html_body, "text/html")
+                msg.send()
+            except:
+                pass
+            
+            customer_models.Notification.objects.create(notification_type="New Order", user=request.user) 
+            
+            
             
             #send email to vendor
-            for item in order.order_item:
+            for item in order.order_item():
                 vendor_merge_data = {
                     "item": item
                 }
@@ -512,11 +518,12 @@ def stripe_payment_verify(request, order_id):
                     msg.attach_alternative(html_body, "text/html")
                     msg.send()
                     
-                    vendor_models.Notification.create(type="New Order", user=item.vendor, order=item)
                 except:
                     pass
             
             #send inApp notification
+            vendor_models.Notification.objects.create(notification_type="New Order", user=item.vendor, order=item)
+
             
         return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
     return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
@@ -542,12 +549,56 @@ def paystack_payment_verify(request, order_id):
                     order.save()
                     clear_cart_items(request)
                     
-                    #send email to customer
+                    customer_merge_data = {
+                "order" : order,
+                "order_items" : order.order_item()
+            }
+            subject= f"New Order"
+            text_body = render_to_string("email/order/customer/customer_new_order.html",customer_merge_data)
+            html_body = render_to_string("email/order/customer/customer_new_order.txt",customer_merge_data)
+            
+            try:
+                msg = EmailMultiAlternatives(
+                    subject=subject,
+                    from_email=settings.FROM_EMAIL,
+                    to=[order.address.email], body=text_body
+                )
+                msg.attach_alternative(html_body, "text/html")
+                msg.send()
+            except:
+                pass
+            
+            
+            #send email to vendor
+            for item in order.order_item():
+                vendor_merge_data = {
+                    "item": item
+                }
+                try:
                     
-                    #send email to vendor
+                    subject= f"New Order"
+                    text_body = render_to_string("email/order/vendor/vendor_new_order.html",vendor_merge_data)
+                    html_body = render_to_string("email/order/vendor/vendor_new_order.txt",vendor_merge_data)
+                    
+                    msg = EmailMultiAlternatives(
+                        subject=subject,
+                        from_email=settings.FROM_EMAIL,
+                        to=[item.vendor.email], body=text_body
+                    )
+                    msg.attach_alternative(html_body, "text/html")
+                    msg.send()
+                    
+                except:
+                    pass
                     
                     #send inApp notification
-                    return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
+                customer_not = customer_models.Notification(notification_type="New Order", user=request.user)
+                customer_not.save()
+                
+                vendor_not = vendor_models.Notification(notitfication_type="New Order", user=item.vendor, order=item)
+                vendor_not.save()
+                
+            return redirect(f"/payment_status/{order.order_id}/?payment_status=Paid")
                 
         return redirect(f"/payment_status/{order.order_id}/?payment_status=Failed")
 
