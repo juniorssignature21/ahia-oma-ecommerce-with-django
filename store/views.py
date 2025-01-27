@@ -2,7 +2,7 @@ from django.shortcuts import render, redirect, get_object_or_404
 from django.http import JsonResponse
 from django.urls import reverse
 from plugin.service_fee import calculate_service_fee
-from plugin.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
+# from plugin.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 from store import models as store_models
 from customer import models as customer_models
 from vendor import models as vendor_models
@@ -220,9 +220,9 @@ def create_order(request):
 def checkout(request, order_id):
     order = store_models.Order.objects.get(order_id=order_id)
     
-    amount_in_inr  = convert_usd_inr(order.total)
-    amount_in_kobo  = convert_usd_kobo(order.total)
-    amount_in_ngn  = convert_usd_ngn(order.total)
+    # amount_in_inr  = convert_usd_inr(order.total)
+    # amount_in_kobo  = convert_usd_kobo(order.total)
+    # amount_in_ngn  = convert_usd_ngn(order.total)
     
     context = {
         "order":order,
@@ -230,9 +230,9 @@ def checkout(request, order_id):
         "stripe_public_key": settings.STRIPE_PUBLIC_KEY,
         "paystack_public_key": settings.PAYSTACK_PUBLIC_KEY,
         "flutterwave_public_key": settings.FLUTTERWAVE_PUBLIC_KEY,
-        "amount_in_inr":amount_in_inr,
-        "amount_in_kobo":amount_in_kobo,
-        "amount_in_ngn":amount_in_ngn,
+        # "amount_in_inr":amount_in_inr,
+        # "amount_in_kobo":amount_in_kobo,
+        # "amount_in_ngn":amount_in_ngn,
     }
     return render(request, "store/checkout.html", context)
         

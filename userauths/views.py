@@ -50,8 +50,8 @@ def register_view(request):
         
         profile.save()
         
-        next_url = request.GET.get("next", "store:index")
-        return redirect("next")
+        # next_url = request.GET.get("next", "store:index")
+        return redirect("/")
     
     context = {
         "form": form
