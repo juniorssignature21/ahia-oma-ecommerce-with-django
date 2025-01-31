@@ -1,11 +1,12 @@
 from django.shortcuts import render, redirect, get_object_or_404
-from django.http import JsonResponse
+from django.http import JsonResponse, HttpResponse
 from django.urls import reverse
 from plugin.service_fee import calculate_service_fee
 # from plugin.exchange_rate import convert_usd_inr, convert_usd_kobo, convert_usd_ngn
 from store import models as store_models
 from customer import models as customer_models
 from vendor import models as vendor_models
+from userauths import models as user_models
 from django.contrib import messages
 from django.db.models import Q, Avg, Sum
 from decimal import Decimal
@@ -22,9 +23,9 @@ from django.template.loader import render_to_string
 
 
 # Create your views here.
-
-def index(request):
-    
+def custom_404_view(request):
+    return render(request, "partials/404.html", status=404)
+def home(request):
     products = store_models.Product.objects.filter(status="Published")
     categories = store_models.Category.objects.all()[:6]
     
@@ -34,6 +35,20 @@ def index(request):
         "categories":categories,
     }
     return render(request, "store/index.html", context)
+
+def index(request):
+    try:
+        customer_profile = user_models.Profile.objects.get(user=request.user)
+        if customer_profile.user_Type == "Customer":
+            return redirect("customer:dashboard")
+        elif customer_profile.user_Type == "Vendor":
+            return redirect("/")
+        else:
+            return HttpResponse("Create a profile")
+    except:
+        return redirect(to="store:home")
+    
+    
 
 def product_detail(request, slug):
     

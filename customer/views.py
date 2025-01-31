@@ -11,6 +11,9 @@ from customer import models as customer_models
 
 
 # Create your views here.
+def custom_404_view(request):
+    return render(request, "partials/404.html", status=404)
+
 @login_required
 def dashboard(request):
     orders = store_models.Order.objects.filter(customer=request.user)
@@ -24,4 +27,35 @@ def dashboard(request):
     }
     
     return render(request, "customer/dashboard.html", context)
+
+@login_required
+def orders(request):
+    orders = store_models.Order.objects.filter(customer=request.user)
+    
+    context = {
+        "orders":orders,
+    }
+    
+    return render(request, "customer/orders.html", context)
+
+@login_required
+def order_detail(request, order_id):
+    order = store_models.Order.objects.get(customer=request.user, order_id=order_id)
+    
+    context = {
+        "order":order
+    }
+    
+    return render(request, "customer/order_detail.html", context)
+
+@login_required
+def order_item_detail(request, order_id, item_id):
+    order = store_models.Order.objects.get(customer=request.user, order_id=order_id)
+    item  = store_models.OrderItem.objects.get(order=order, item_id=item_id)
+    
+    context = {
+        "order":order,
+        "item":item,
+    }
+    return render(request, "customer/order_item_detail.html", context)
     

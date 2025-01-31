@@ -3,8 +3,12 @@ from store import views
 
 app_name = 'store'
 
+handler404 = views.custom_404_view
+
+
 urlpatterns = [
     path("", views.index, name="index"),
+    path("home/", views.home, name="home"),
     path("detail/<str:slug>/", views.product_detail, name="product-detail"),
     path("add_to_cart/", views.add_to_cart, name="add_to_cart"),
     path("cart/", views.cart, name="cart"),

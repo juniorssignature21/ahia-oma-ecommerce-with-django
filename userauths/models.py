@@ -5,8 +5,8 @@ from django.utils import timezone
 # Create your models here.
 
 USER_TYPE = [
-    ("vendor", "vendor"),
-    ("customer","customer")
+    ("Vendor", "Vendor"),
+    ("Customer","Customer")
 ]
 
 class User(AbstractUser):
