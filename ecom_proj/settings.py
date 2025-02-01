@@ -36,7 +36,7 @@ BASE_DIR = Path(__file__).resolve().parent.parent
 # SECRET_KEY = os.getenv(‘SECRET_KEY’) if “SECRET_KEY” in os.environ[“SECRET_KEY”] else config(“SECRET_KEY”)
 
 
-SECRET_KEY = os.environ.get("SECRET_KEY")
+SECRET_KEY = os.getenv("SECRET_KEY")
 
 DEBUG = os.environ.get("DEBUG") != "False"
 
