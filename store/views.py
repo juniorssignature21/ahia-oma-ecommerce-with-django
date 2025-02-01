@@ -23,8 +23,8 @@ from django.template.loader import render_to_string
 
 
 # Create your views here.
-def custom_404_view(request):
-    return render(request, "partials/404.html", status=404)
+# def custom_404_view(request):
+#     return render(request, "partials/404.html", status=404)
 def home(request):
     products = store_models.Product.objects.filter(status="Published")
     categories = store_models.Category.objects.all()[:6]

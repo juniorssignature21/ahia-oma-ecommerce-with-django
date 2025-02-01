@@ -3,7 +3,7 @@ from store import views
 
 app_name = 'store'
 
-handler404 = views.custom_404_view
+# handler404 = views.custom_404_view
 
 
 urlpatterns = [
