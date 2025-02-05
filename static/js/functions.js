@@ -99,7 +99,7 @@ $(document).ready(function() {
     
         // Proceed with the AJAX call if the quantity is within stock limits
         $.ajax({
-            url: "/add_to_cart/",
+            url: "/store/add_to_cart/",
             data: {
                 id: product_id,
                 qty: qty,
@@ -173,6 +173,44 @@ $(document).ready(function() {
 
             },
         });
+    });
+
+    $(document).on('click', '.add_to_wishlist', function(){
+        const button = $(this);
+        const product_id = button.attr("data-product_id");
+        console.log(product_id);
+
+        $.ajax({
+            url: `/customers/add_to_wishlist/${product_id}/`,
+            beforeSend: function () {
+                button.html("<i class='fas fa-spinner fa-spin text-grey'></i>");
+            },
+
+            success: function(response){
+                button.html("<i class='far fa-heart'></i>");
+                console.log(response);
+
+                if (response.message === "User is not logged in"){
+                    Toast.fire({
+                        icon: "warning",
+                        title: response.message,
+                        
+                    });
+
+                } else {
+                    Toast.fire({
+                        icon: "success",
+                        title: response.message,
+                        
+                    });
+                };
+            },
+            error: function(){
+                button.html("<i class='far fa-heart'></i>");
+            }
+
+        });
+
     });
 });
 

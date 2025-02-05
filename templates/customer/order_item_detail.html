@@ -137,7 +137,40 @@
                                             <b>
                                                 Shipping Service:
                                             </b>
-                                            {{item.shipping_services}}
+                                            {% if item.shipping_services == "DHL" %}
+                                            <a href="https://www.dhl.com/global-en/home/tracking.html?.tracking-id={{item.tracking_id}}" class="btn btn-primary text-light btn-sm rounded mt-2">
+                                                <i class="fas fa-truck ms-1">
+                                                    Track order
+                                                </i>
+                                            </a>
+                                            {% endif %}
+
+                                            {% if item.shipping_services == "FedeX" %}
+
+                                            <a href="https://www.fedex.com/fedextrack/?tracknumbers={{item.tracking_id}}" class="btn btn-primary text-light btn-sm rounded mt-2">
+                                                <i class="fas fa-truck ms-1">
+                                                    Track order
+                                                </i>
+                                            </a>
+                                            {% endif %}
+
+                                            {% if item.shipping_services == "UPS" %}
+
+                                            <a href="https://www.ups.com/track?tracknum={{item.tracking_id}}" class="btn btn-primary text-light btn-sm rounded mt-2">
+                                                <i class="fas fa-truck ms-1">
+                                                    Track order
+                                                </i>
+                                            </a>
+                                            {% endif %}
+                                            {% if item.shipping_services == "GIG Logistics" %}
+
+                                            <a href="https://www.giglogistics.com/track/{{item.tracking_id}}" class="btn btn-primary text-light btn-sm rounded mt-2">
+                                                <i class="fas fa-truck ms-1">
+                                                    Track order
+                                                </i>
+                                            </a>
+
+                                            {% endif %}
                                         </td>
                                     </tr>
                             </tbody>
@@ -163,5 +196,5 @@
 <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
 <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
 <script src="{% static 'assets/js/ready.min.js' %}"></script>
-<script src="{% static 'assets/js/demo.js' %}"></script>
+{% comment %} <script src="{% static 'assets/js/demo.js' %}"></script> {% endcomment %}
 </html>	

@@ -36,7 +36,7 @@
                     </span>
                 </a>
             </li>
-            <li class="nav-item dropdown hidden-caret">
+            {% comment %} <li class="nav-item dropdown hidden-caret">
                 <a class="nav-link dropdown-toggle" href="#" id="navbarDropdown" role="button" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                     <i class="la la-bell"></i>
                     <span class="notification">
@@ -90,10 +90,10 @@
                         </div>
                     </li>
                     <li>
-                        <a class="see-all" href="javascript:void(0);"> <strong>See all notifications</strong> <i class="la la-angle-right"></i> </a>
+                        <a class="see-all" href="{% url "customer:notis" %}"> <strong>See all notifications</strong> <i class="la la-angle-right"></i> </a>
                     </li>
                 </ul>
-            </li>
+            </li> {% endcomment %}
             <li class="nav-item dropdown">
                 <a class="dropdown-toggle profile-pic" data-toggle="dropdown" href="#" aria-expanded="false"> <img src="{% static 'assets/img/profile.jpg' %}" alt="user-img" width="36" class="img-circle"><span >
                     {{request.user.profile.full_name}}
@@ -171,35 +171,33 @@
                 </a>
             </li>
             <li class="nav-item">
-                <a href="notifications.html">
-                    <i class="la la-bell"></i>
+                <a href="{% url "customer:addresses" %}">
+                    <i class="la la-home"></i>
                     <p>Address</p>
-                    <span class="badge badge-success">
-                        {{notis.count}}
-                    </span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% url "customer:orders" %}">
                     <i class="la la-bell"></i>
                     <p>Orders</p>
-                    <span class="badge badge-success">
-                        {{orders.count}}
-                    </span>
                 </a>
             </li>
             <li class="nav-item">
-                <a href="notifications.html">
+                <a href="{% url "customer:notis" %}">
+                    <i class="la la-bell"></i>
+                    <p>Notifications</p>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a href="{% url "customer:wishlist" %}">
                     <i class="la la-heart"></i>
                     <p>Wishlist</p>
-                    <span class="badge badge-success">3</span>
                 </a>
             </li>
             <li class="nav-item">
                 <a href="{% url "userauths:logout_user" %}">
                     <i class="la la-power-off"></i>
                     <p>Logout</p>
-                    <span class="badge badge-success">3</span>
                 </a>
             </li>
         </ul>

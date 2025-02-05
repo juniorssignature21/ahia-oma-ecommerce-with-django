@@ -4,6 +4,7 @@ from django.contrib import messages
 from django.db import models
 from django.contrib.auth.decorators import login_required
 from django.contrib.auth.hashers import check_password
+from django.http import JsonResponse
 
 # from plugin.paginate_queryset import paginate_queryset
 from store import models as store_models
@@ -58,4 +59,148 @@ def order_item_detail(request, order_id, item_id):
         "item":item,
     }
     return render(request, "customer/order_item_detail.html", context)
+
+
+@login_required
+def wishlist(request):
+    wiishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
+    
+    context  = {
+        "wishlist_list" : wiishlist_list
+    }
+    return render(request, "customer/wishlist.html", context)
+
+@login_required
+def delete_wishlist(request, pk):
+    wishlist_list  = customer_models.Wishlist.objects.get(user=request.user, id=pk)
+    wishlist_list.delete()
+    
+    messages.success(request, "Item remove from wishlsit")
+        
+    return redirect("customer:wishlist")
+
+@login_required
+def add_to_wishlist(request, pk):
+    if request.user.is_authenticated:
+        product = store_models.Product.objects.filter(id=pk).first()
+        wishlist_exist = customer_models.Wishlist.objects.filter(product=product, user=request.user).first()
+        if not wishlist_exist: 
+               
+            customer_models.Wishlist.objects.create(
+                user=request.user,
+                product=product
+            )    
+        wishlist = customer_models.Wishlist.objects.filter(user=request.user)
+        return JsonResponse({"message": "Item added to wishlist", "wishlist_count": wishlist.count()})
+    else:
+        return JsonResponse({"Message": "User is not logged in", "wishlist_count": "0"})
+    
+
+@login_required
+def notis(request):
+    notis_list = customer_models.Notification.objects.filter(user=request.user)
+    unseen_notis_list = customer_models.Notification.objects.filter(user=request.user, seen=False)
+    
+    
+    context={
+        "notis_list":notis_list,
+        "unseen_notis_list":unseen_notis_list,
+    }
+    
+    return render(request, "customer/notis.html", context)
+
+@login_required
+def mark_notis_seen(request, pk):
+    notis_list = customer_models.Notification.objects.get(user=request.user, id=pk,  seen=False)
+    notis_list.seen=True
+    
+    notis_list.save()
+    
+    messages.success(request, "Notification marked as seen")
+    return redirect("customer:notis")
+
+@login_required
+def addresses(request):
+    addressess = customer_models.Address.objects.filter(user=request.user)
+    
+    context = {
+        "addressess":addressess
+    }
+    return render(request, "customer/addresses.html", context)
+
+@login_required
+def address_detail(request, pk):
+    address = customer_models.Address.objects.get(user=request.user, id=pk)
+    
+    if request.method == "POST":
+        first_name = request.POST.get("fname") 
+        last_name = request.POST.get("lname") 
+        mobile = request.POST.get("mobile") 
+        email = request.POST.get("email") 
+        country = request.POST.get("country") 
+        state = request.POST.get("state") 
+        city = request.POST.get("city") 
+        address_location = request.POST.get("address") 
+        zip_code = request.POST.get("zip_code") 
+        
+        address.first_name = first_name
+        
+        address.first_name = first_name
+        address.last_name = last_name
+        address.mobile = mobile
+        address.email = email
+        address.country = country
+        address.state = state
+        address.address = address_location
+        address.zip_code = zip_code
+        
+        address.save()
+        
+        messages.success(request, "Address Updated")
+        return redirect("customer:address_detail", address.id)
+    
+    context = {
+        "address":address
+    }
+    
+    return render(request, "customer/address.html", context)
+
+@login_required
+def address_create(request):
+    if request.method == "POST":
+        first_name = request.POST.get("fname") 
+        last_name = request.POST.get("lname") 
+        mobile = request.POST.get("mobile") 
+        email = request.POST.get("email") 
+        country = request.POST.get("country") 
+        state = request.POST.get("state") 
+        city = request.POST.get("city") 
+        address_location = request.POST.get("address") 
+        zip_code = request.POST.get("zip_code")
+        
+        customer_models.Address.objects.create(
+            user=request.user,
+            first_name=first_name,
+            last_name=last_name,
+            mobile=mobile,
+            email=email,
+            country=country,
+            state=state,
+            city=city,
+            address=address_location,
+            zip_code=zip_code, 
+        )
+        messages.success(request, "Address Created")
+        return redirect("customer:addresses")
+    
+    
+    return render(request, "customer/address_create.html")
+
+@login_required
+def address_delete(request, pk):
+    address = customer_models.Address.objects.get(user=request.user, id=pk)
+    address.delete()
+    messages.success(request, "Address Delete")
+    return redirect("customer:addresses")
+    
     

@@ -1,3 +1,22 @@
+.rows{
+	display: flex;
+	justify-content: space-evenly;
+	align-items: center;
+	flex-wrap: wrap;
+}
+
+	
+.rows .col-div{
+	margin-bottom: 20px;
+	width: 280px;
+}
+	
+@media only screen and (max-width:425px) {
+	.rows{
+		justify-content: center;
+	}
+}
+
 .update-pro{
 	margin: 15px 25px;}
 
