@@ -163,7 +163,7 @@ def address_detail(request, pk):
         "address":address
     }
     
-    return render(request, "customer/address.html", context)
+    return render(request, "customer/address_detail.html", context)
 
 @login_required
 def address_create(request):
@@ -203,4 +203,11 @@ def address_delete(request, pk):
     messages.success(request, "Address Delete")
     return redirect("customer:addresses")
     
+
+@login_required
+def customer_profile(request):
+    profile = request.user.profile
     
+    if request.method == "POST":
+        image = request.FILES.get("image")
+        # full_name = reqi

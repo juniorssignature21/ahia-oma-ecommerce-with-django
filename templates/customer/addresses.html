@@ -21,8 +21,17 @@
                     <h4>
                         Address
                     </h4>
-                    {% for add  in addressess %}
-                    <div class="card text-start w-50">
+                        <a class="btn btn-primary" href="{% url "customer:address_create" %}">
+                            create new address
+                        </a>
+                        <br>
+                        <br>
+                <div class="rows">
+                {% for add  in addressess %}
+                <div class="col-div">
+
+                    <div class="card">
+
                         {% comment %} <img class="card-img-top" src="holder.js/100px180/" alt="Title" /> {% endcomment %}
                         <div class="card-body">
                             <h4 class="card-title">
@@ -37,21 +46,66 @@
                             </a>
                             <p class="card-text">
                                 <b>
-                                    Sent:
+                                    FullName:
                                 </b>
-                                {{n.date}}
+                                {{add.last_name|capfirst}}
+                                {{add.first_name|capfirst}} 
+                            </p>
+                            
+                            <p class="card-text">
+                                <b>
+                                    Mobile:
+                                </b>
+                                {{add.mobile}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    Email:
+                                </b>
+                                {{add.email}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    Address:
+                                </b>
+                                {{add.address}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    City:
+                                </b>
+                                {{add.city}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    State:
+                                </b>
+                                {{add.state}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    Country:
+                                </b>
+                                {{add.country}}
+                            </p>
+                            <p class="card-text">
+                                <b>
+                                    Zipcode:
+                                </b>
+                                {{add.zip_code}}
                             </p>
                 
     
                         </div>
                     </div>
-                    {% endfor %}
-
-                
-
                 </div>
+                {% endfor %}
+            </div>
                 
-			</div>
+            
+                
+            </div>
+            </div>
 		</div>
 	</div>
 	

@@ -20,7 +20,7 @@ urlpatterns = [
     
     path("addresses/", views.addresses, name="addresses"),
     path("address_detail/<pk>/", views.address_detail, name="address_detail"),
-    path("address_create/", views.address_create, name="mark_notis_seen"),
+    path("address_create/", views.address_create, name="address_create"),
     path("address_delete/<pk>/", views.address_delete, name="address_delete"),
 ]
 
