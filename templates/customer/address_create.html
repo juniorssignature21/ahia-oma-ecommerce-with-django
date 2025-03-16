@@ -1,95 +1,65 @@
+{% extends "./base.html" %}
 {% load static %}
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Forms - Ready Bootstrap Dashboard</title>
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
-</head>
-<body>
-	<div class="wrapper">
-		<div class="main-header">
-            {% include "./sidebar.html" %}
-            <div class="main-panel">
+{% block content %}
+<div class="main-panel">
 
-				<div class="content">
+    <div class="content">
 
-                <div class="col-md-6">
-                    <form class="card" method="POST">
-                        {% csrf_token %}
-                        <div class="card-header">
-                            <div class="card-title">
-                                Update Address
-                            </div>
-                        </div>
-                        <div class="card-body">
-                            <div class="form-group">
-                                <label for="squareInput">First Name</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="John" name="fname" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Last Name</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="Doe" name="lname" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Mobile</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="Phone Number" name="mobile" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Email</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="John@Doe.com" name="email" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Country</label>
-                                <input type="text" class="form-control input-square" id="squareInput" name="country"required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">State</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="state"required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">City</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="city"required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Address</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="address" required>
-                            </div>
-                            <div class="form-group">
-                                <label for="squareInput">Zipcode</label>
-                                <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="zip_code"required>
-                            </div>
-                            								
-                        </div>
-                        <div class="card-action">
-                            <button type="submit" class="btn btn-success">Submit</button>
-                            <button type="cancel" class="btn btn-danger">Cancel</button>
-                        </div>
-                    </div>
-                    
-                    </form>
+    <div class="col-md-6">
+        <form class="card" method="POST">
+            {% csrf_token %}
+            <div class="card-header">
+                <div class="card-title">
+                    Update Address
                 </div>
-
+            </div>
+            <div class="card-body">
+                <div class="form-group">
+                    <label for="squareInput">First Name</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="John" name="fname" required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Last Name</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="Doe" name="lname" required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Mobile</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="Phone Number" name="mobile" required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Email</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="John@Doe.com" name="email" required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Country</label>
+                    <input type="text" class="form-control input-square" id="squareInput" name="country"required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">State</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="state"required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">City</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="city"required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Address</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="address" required>
+                </div>
+                <div class="form-group">
+                    <label for="squareInput">Zipcode</label>
+                    <input type="text" class="form-control input-square" id="squareInput" placeholder="" name="zip_code"required>
+                </div>
+                                                
+            </div>
+            <div class="card-action">
+                <button type="submit" class="btn btn-success">Submit</button>
+                <button type="cancel" class="btn btn-danger">Cancel</button>
             </div>
         </div>
+        
+        </form>
     </div>
 
-</body>
-<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
-<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chartist/chartist.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-<script src="{% static 'assets/js/ready.min.js' %}"></script>
-{% comment %} <script src="{% static 'assets/js/demo.js' %}"></script> {% endcomment %}
-</html>	
+</div>
+{% endblock content %}

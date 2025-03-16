@@ -485,3 +485,7 @@ CKEDITOR_5_CONFIGS = {
         },
     },
 }
+
+LOGIN_REDIRECT_URL = '/'  # Might cause a loop if `/` requires login and redirects back to login
+LOGIN_URL = '/userauths/login_user/'  # Make sure this is correct
+SECURE_SSL_REDIRECT = False  # Set to False to avoid forced HTTPS redirection

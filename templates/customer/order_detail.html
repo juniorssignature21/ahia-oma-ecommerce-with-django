@@ -1,320 +1,290 @@
+{% extends "./base.html" %}
 {% load static %}
+{% block content %}
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Ready Bootstrap Dashboard</title>
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
-</head>
-<body>
-	<div class="wrapper">
-		<div class="main-header">
+	<div class="main-panel">
+		<div class="content">
 			
-			{% include "./sidebar.html" %}
-			<div class="main-panel">
-				<div class="content">
-					
-					
-					<div class="card">
-                        
-                        <div class="card-body">
-							<div class="card-sub w-100  d-flex justify-content-between">
-								<div>
-									<p>
-										Order Number
-									</p>
-									<b>
-										#{{order.order_id}}
-									</b>
-								</div>
-								<div>
-									
-								</div>
-							</div>
-                            {% for item in order.order_item.all %}
-
-								<table class="table">
-									<thead>
-									</thead>
-									<tbody>
-										
-										<tr class="any">
-											
-											<td>
-												<div class="d-flex justify-contents-between align-items-center">
-													<img src="{{item.product.image.url}}" alt="" width="40px" height="40px">
-													<div>
-														<b>
-															{{item.product.name}}
-														</b>
-														<br>
-														
-														<small>
-															Vendor: {{item.product.vendor.profile.full_name}}
-														</small>
-														<br>
-														{% if item.color %}
-														<span class="text-dark medium">
-															Color: {{item.color}}
-														</span>
-														{% else %}
-														<small>
-															Color: N/A
-														</small>
-														{% endif %}
-														<br>
-														{% if item.size %}
-														<span class="text-dark medium">
-															size: {{item.size}}
-														</span>
-														{% else %}
-														<small>
-															size: N/A
-														</small>
-														{% endif %}
-														<br>
-														<b>
-													${{item.price}}
-														</b>
-                                                        
-													</div>
-												</div>
-											</td>
-											
-											<td>
-												Status: 
-												<br>
-												<span
-													class="badge {% if item.order_status == "Pending" %}  bg-warning {% elif item.order_status == "Success" %}bg-success {%else%} bg-danger  {% endif %}  text-white"
-													>
-													{{item.order_status}}
-													</span
-												>
-												
-											</td>
-											<td>
-												Payment Status: 
-												<br>
-												<span
-													class="badge {% if order.payment_status == "Processing" %}  bg-warning {% elif order.payment_status == "Paid" %}bg-success {%else%} bg-danger  {% endif %}  text-white"
-													>
-													{{order.payment_status}}
-													</span
-												>
-												
-											</td>
-											
-                                            <td>
-                                                <div class="d-grid gap-2">
-                                                    <a
-                                                        href="{% url "customer:order_item_detail" order.order_id item.item_id  %}"
-                                                        class="btn btn-primary"
-                                                        title="view item"
-                                                    >
-                                                        <i class="la la-eye"></i>
-                                                    </a>
-                                                </div>
-                                            </td>
-											
-										</tr>
-                                        
-										
-									</tbody>
-								</table>
-							{% endfor %}
-							<table class="table">
-								<tbody>
-									<tr>
-										<td>
-											Paid using 
-											{{order.payment_method}}
-										</td>
-										<td>
-											Total: ${{order.total}}
-										</td>
-										</tr>
-								</tbody>
-							</table>
-                            <h3>
-                                Order Summary
-                            </h3>
-							<table class="table">
-								<tbody>
-									<tr>
-										<td>
-											Date:  
-											<b>
-                                               {{order.date}}
-                                            </b>
-										</td>
-										</tr>
-									<tr>
-										<td>
-											SubTotal:  
-											<b>
-                                               ${{order.sub_total}}
-                                            </b>
-										</td>
-										</tr>
-									<tr>
-										<td>
-											Shipping:  
-											<b>
-                                               ${{order.shipping}}
-                                            </b>
-										</td>
-										</tr>
-                                        <tr>
-                                            <td>
-                                                Tax:  
-                                                <b>
-                                                   ${{order.tax}}
-                                                </b>
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Total:  
-                                                    <b>
-                                                       ${{order.total}}
-                                                    </b>
-                                                </td>
-                                                </tr>
-								</tbody>
-							</table>
-                            <h3>
-                                Bio Data
-                            </h3>
-							<table class="table">
-								<tbody>
-									<tr>
-										<td>
-											Fullname:  
-											<b>
-                                               {{order.customer.profile.full_name|capfirst}}
-                                            </b>
-										</td>
-										</tr>
-									<tr>
-										<td>
-											Email:  
-											<b>
-                                               {{order.customer.email}}
-                                            </b>
-										</td>
-										</tr>
-                                        <tr>
-                                            <td>
-                                                Mobile:  
-                                                <b>
-                                                   {{order.customer.profile.mobile}}
-                                                </b>
-                                            </td>
-                                            </tr>
-                                            
-                                        
-								</tbody>
-							</table>
-                            <h3>
-                                Shipping Details
-                            </h3>
-							<table class="table">
-								<tbody>
-									<tr>
-										<td>
-											Fullname:  
-											<b>
-                                               {{order.address.first_name|capfirst}} {{order.address.last_name|capfirst}}
-                                            </b>
-										</td>
-										</tr>
-									<tr>
-										<td>
-											Email:  
-											<b>
-                                               {{order.address.email}}
-                                            </b>
-										</td>
-										</tr>
-                                        <tr>
-                                            <td>
-                                                Mobile:  
-                                                <b>
-                                                   {{order.address.mobile}}
-                                                </b>
-                                            </td>
-                                        </tr>
-                                        <tr>
-                                            <td>
-                                                City:  
-                                                <b>
-                                                   {{order.address.city}}
-                                                </b>
-                                            </td>
-                                            </tr>
-                                        <tr>
-                                            <td>
-                                                State:  
-                                                <b>
-                                                   {{order.address.state}} State
-                                                </b>
-                                            </td>
-                                            </tr>
-                                        <tr>
-                                            <td>
-                                                Country:  
-                                                <b>
-                                                    {{order.address.country}}
-                                                </b>
-                                            </td>
-                                            </tr>
-                                            <tr>
-                                                <td>
-                                                    Address:  
-                                                    <b>
-                                                       {{order.address.address}}
-                                                    </b>
-                                                </td>
-                                                </tr>
-                                                <tr>
-                                                    <td>
-                                                        Zip Code:  
-                                                        <b>
-                                                           {{order.address.zip_code}}
-                                                        </b>
-                                                    </td>
-                                                    </tr>
-                                            
-                                        
-								</tbody>
-							</table>
+			
+			<div class="card">
+				
+				<div class="card-body">
+					<div class="card-sub w-100  d-flex justify-content-between">
+						<div>
+							<p>
+								Order Number
+							</p>
+							<b>
+								#{{order.order_id}}
+							</b>
+						</div>
+						<div>
+							
 						</div>
 					</div>
+					{% for item in order.order_item.all %}
 
+						<table class="table">
+							<thead>
+							</thead>
+							<tbody>
+								
+								<tr class="any">
+									
+									<td>
+										<div class="d-flex justify-contents-between align-items-center">
+											<img src="{{item.product.image.url}}" alt="" width="40px" height="40px">
+											<div>
+												<b>
+													{{item.product.name}}
+												</b>
+												<br>
+												
+												<small>
+													Vendor: {{item.product.vendor.profile.full_name}}
+												</small>
+												<br>
+												{% if item.color %}
+												<span class="text-dark medium">
+													Color: {{item.color}}
+												</span>
+												{% else %}
+												<small>
+													Color: N/A
+												</small>
+												{% endif %}
+												<br>
+												{% if item.size %}
+												<span class="text-dark medium">
+													size: {{item.size}}
+												</span>
+												{% else %}
+												<small>
+													size: N/A
+												</small>
+												{% endif %}
+												<br>
+												<b>
+											${{item.price}}
+												</b>
+												
+											</div>
+										</div>
+									</td>
+									
+									<td>
+										Status: 
+										<br>
+										<span
+											class="badge {% if item.order_status == "Pending" %}  bg-warning {% elif item.order_status == "Success" %}bg-success {%else%} bg-danger  {% endif %}  text-white"
+											>
+											{{item.order_status}}
+											</span
+										>
+										
+									</td>
+									<td>
+										Payment Status: 
+										<br>
+										<span
+											class="badge {% if order.payment_status == "Processing" %}  bg-warning {% elif order.payment_status == "Paid" %}bg-success {%else%} bg-danger  {% endif %}  text-white"
+											>
+											{{order.payment_status}}
+											</span
+										>
+										
+									</td>
+									
+									<td>
+										<div class="d-grid gap-2">
+											<a
+												href="{% url "customer:order_item_detail" order.order_id item.item_id  %}"
+												class="btn btn-primary"
+												title="view item"
+											>
+												<i class="la la-eye"></i>
+											</a>
+										</div>
+									</td>
+									
+								</tr>
+								
+								
+							</tbody>
+						</table>
+					{% endfor %}
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									Paid using 
+									{{order.payment_method}}
+								</td>
+								<td>
+									Total: ${{order.total}}
+								</td>
+								</tr>
+						</tbody>
+					</table>
+					<h3>
+						Order Summary
+					</h3>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									Date:  
+									<b>
+										{{order.date}}
+									</b>
+								</td>
+								</tr>
+							<tr>
+								<td>
+									SubTotal:  
+									<b>
+										${{order.sub_total}}
+									</b>
+								</td>
+								</tr>
+							<tr>
+								<td>
+									Shipping:  
+									<b>
+										${{order.shipping}}
+									</b>
+								</td>
+								</tr>
+								<tr>
+									<td>
+										Tax:  
+										<b>
+											${{order.tax}}
+										</b>
+									</td>
+									</tr>
+									<tr>
+										<td>
+											Total:  
+											<b>
+												${{order.total}}
+											</b>
+										</td>
+										</tr>
+						</tbody>
+					</table>
+					<h3>
+						Bio Data
+					</h3>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									Fullname:  
+									<b>
+										{{order.customer.profile.full_name|capfirst}}
+									</b>
+								</td>
+								</tr>
+							<tr>
+								<td>
+									Email:  
+									<b>
+										{{order.customer.email}}
+									</b>
+								</td>
+								</tr>
+								<tr>
+									<td>
+										Mobile:  
+										<b>
+											{{order.customer.profile.mobile}}
+										</b>
+									</td>
+									</tr>
+									
+								
+						</tbody>
+					</table>
+					<h3>
+						Shipping Details
+					</h3>
+					<table class="table">
+						<tbody>
+							<tr>
+								<td>
+									Fullname:  
+									<b>
+										{{order.address.first_name|capfirst}} {{order.address.last_name|capfirst}}
+									</b>
+								</td>
+								</tr>
+							<tr>
+								<td>
+									Email:  
+									<b>
+										{{order.address.email}}
+									</b>
+								</td>
+								</tr>
+								<tr>
+									<td>
+										Mobile:  
+										<b>
+											{{order.address.mobile}}
+										</b>
+									</td>
+								</tr>
+								<tr>
+									<td>
+										City:  
+										<b>
+											{{order.address.city}}
+										</b>
+									</td>
+									</tr>
+								<tr>
+									<td>
+										State:  
+										<b>
+											{{order.address.state}} State
+										</b>
+									</td>
+									</tr>
+								<tr>
+									<td>
+										Country:  
+										<b>
+											{{order.address.country}}
+										</b>
+									</td>
+									</tr>
+									<tr>
+										<td>
+											Address:  
+											<b>
+												{{order.address.address}}
+											</b>
+										</td>
+										</tr>
+										<tr>
+											<td>
+												Zip Code:  
+												<b>
+													{{order.address.zip_code}}
+												</b>
+											</td>
+											</tr>
+									
+								
+						</tbody>
+					</table>
 				</div>
-
 			</div>
+
 		</div>
+
 	</div>
 	
-</body>
-<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
-<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chartist/chartist.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-<script src="{% static 'assets/js/ready.min.js' %}"></script>
-<script src="{% static 'assets/js/demo.js' %}"></script>
-</html>	
+{% endblock content %}
+

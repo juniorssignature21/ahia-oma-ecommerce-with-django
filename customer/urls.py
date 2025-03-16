@@ -22,5 +22,9 @@ urlpatterns = [
     path("address_detail/<pk>/", views.address_detail, name="address_detail"),
     path("address_create/", views.address_create, name="address_create"),
     path("address_delete/<pk>/", views.address_delete, name="address_delete"),
+    
+    path("profile/", views.customer_profile, name="customer_profile"),
+    path("change_password/", views.change_password, name="change_password"),
+    
 ]
 

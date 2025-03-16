@@ -7,6 +7,7 @@ from django.contrib.auth.hashers import check_password
 from django.http import JsonResponse
 
 # from plugin.paginate_queryset import paginate_queryset
+from plugin.paginate_queryset import paginate_queryset
 from store import models as store_models
 from customer import models as customer_models
 
@@ -63,10 +64,12 @@ def order_item_detail(request, order_id, item_id):
 
 @login_required
 def wishlist(request):
-    wiishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
+    wishlist_list = customer_models.Wishlist.objects.filter(user=request.user)
+    # wishlist = paginate_queryset(request, wishlist_list, 1)
     
     context  = {
-        "wishlist_list" : wiishlist_list
+        "wishlist_list" : wishlist_list,
+        # "wishlist" : wishlist,
     }
     return render(request, "customer/wishlist.html", context)
 
@@ -210,4 +213,47 @@ def customer_profile(request):
     
     if request.method == "POST":
         image = request.FILES.get("image")
-        # full_name = reqi
+        full_name = request.POST.get("fname")
+        mobile = request.POST.get("mobile")
+        
+        if image != None:
+            profile.image = image
+            
+        profile.full_name = full_name
+        profile.mobile = mobile#
+        
+        request.user.save()
+        profile.save()
+        
+        messages.success(request, "Profile updated succesfully!!!")
+        return redirect("customer:customer_profile")
+    
+    context = {
+        "profile": profile
+    }
+    return render(request, "customer/profile.html", context)
+
+
+
+@login_required
+def change_password(request):
+    if request.method == "POST":
+        old_password = request.POST.get("old_password")
+        new_password = request.POST.get("new_password")
+        confirm_new_password = request.POST.get("confirm_new_password")
+        
+        if confirm_new_password != new_password:
+            messages.error(request, "Passwords don't match!!!")
+            return redirect(to="customer:change_password")
+        
+        if check_password(old_password, request.user.password):
+            request.user.set_password(new_password)
+            request.user.save()
+            messages.success(request, "Passwords Changed Successfully!!")
+            return redirect(to="customer:customer_profile")
+        else:
+            messages.error(request, "Old Password is Incorrect!!!")
+            return redirect(to="customer:change_password")
+        
+    return render(request, "customer/change_password.html")
+        

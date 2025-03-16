@@ -1,0 +1,109 @@
+{% extends "./base.html" %}
+{% load static %}
+{% block content %}
+
+<div class="main-panel">
+    <div class="content">
+        <div class="container-fluid">
+            <h4 class="page-title">
+                Your Profile
+            </h4>
+
+            {% if messages %}
+            {% for message in messages %}
+            <div
+                class="alert alert-primary alert-dismissible fade show"
+                role="alert"
+            >
+                <button
+                    type="button"
+                    class="btn-close"
+                    data-bs-dismiss="alert"
+                    aria-label="Close"
+                ></button>
+                 {{message}}
+            </div>
+            
+            <script>
+                var alertList = document.querySelectorAll(".alert");
+                alertList.forEach(function (alert) {
+                    new bootstrap.Alert(alert);
+                });
+            </script>
+            
+            {% endfor  %}
+            {% endif %}
+
+            <div class="row">
+                <div class="col-md-6">
+                        <form action="{% url "customer:customer_profile" %}" method="post" enctype="multipart/form-data">
+                            {% csrf_token %}
+                        <div class="card">
+                            
+                            <div class="card-body">
+                                <div class="photo">
+                                    <img src="{{request.user.profile.image.url}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="exampleFormControlFile1">Profile Picture</label>
+                                    <input type="file" class="form-control-file" id="exampleFormControlFile1" name="image">
+                                </div>
+                                <div class="form-group">
+                                    <label for="inlineinput">Full Name:</label>
+                                        <input type="text" class="form-control input-full" id="inlineinput" placeholder="Enter Input" name="fname" value="{{profile.full_name}}">
+                                </div>
+                                <div class="form-group">
+                                    <label for="disableinput">Email:</label>
+                                    <input type="email" class="form-control" id="disableinput" placeholder="Enter Input" value="{{request.user.email}}" name="email"  disabled>
+                                </div>
+                                <div class="form-group">
+                                    <label for="inlineinput">Phone Number:</label>
+                                        <input type="text" class="form-control input-full" id="inlineinput" placeholder="Enter Input" name="mobile" value="{{profile.mobile}}">
+                                </div>
+                               
+                               
+                                										
+                            </div>
+                            <div class="card-action">
+                                <button type="submit" class="btn btn-primary">
+                                    Save <i class="la la-folder"></i>
+                                </button>
+                                <a href="{% url "customer:change_password" %}" class="btn btn-danger">
+                                    Change Password
+                                </a>
+                            </div>
+                        </div>
+                    </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <footer class="footer">
+            <div class="container-fluid">
+                <nav class="pull-left">
+                    <ul class="nav">
+                        <li class="nav-item">
+                            <a class="nav-link" href="http://www.themekita.com">
+                                ThemeKita
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Help
+                            </a>
+                        </li>
+                        <li class="nav-item">
+                            <a class="nav-link" href="#">
+                                Licenses
+                            </a>
+                        </li>
+                    </ul>
+                </nav>
+                <div class="copyright ml-auto">
+                    2018, made with <i class="la la-heart heart text-danger"></i> by <a href="http://www.themekita.com">ThemeKita</a>
+                </div>				
+            </div>
+        </footer>
+    </div>
+
+{% endblock content %}

@@ -1,126 +1,90 @@
+{% extends "./base.html" %}
 {% load static %}
+{% block content %}
 
-<!DOCTYPE html>
-<html>
-<head>
-	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-	<title>Ready Bootstrap Dashboard</title>
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
-</head>
-<body>
-	<div class="wrapper">
-		<div class="main-header">
-			
-			{% include "./sidebar.html" %}
-			<div class="main-panel">
-				<div class="content">
-                    <h4>
-                        Address
-                    </h4>
-                        <a class="btn btn-primary" href="{% url "customer:address_create" %}">
-                            create new address
-                        </a>
-                        <br>
-                        <br>
-                <div class="rows">
-                {% for add  in addressess %}
-                <div class="col-div">
+<div class="main-panel">
+    <div class="content">
+        <h4>
+            Address
+        </h4>
+            <a class="btn btn-primary" href="{% url "customer:address_create" %}">
+                create new address
+            </a>
+            <br>
+            <br>
+    <div class="rows">
+    {% for add  in addressess %}
+    <div class="col-div">
 
-                    <div class="card">
+        <div class="card">
 
-                        {% comment %} <img class="card-img-top" src="holder.js/100px180/" alt="Title" /> {% endcomment %}
-                        <div class="card-body">
-                            <h4 class="card-title">
-                                Shipping Address
-                            </h4>
-                            
-                            <a href="{% url "customer:address_detail" add.id  %}" class="badge  bg-primary text-bg-primary">
-                                <i class="la la-edit text-white" style="font-size: 20px;"></i>
-                            </a>
-                            <a href="{% url "customer:address_delete" add.id  %}" class="badge  bg-danger text-bg-primary">
-                                <i class="la la-trash text-white" style="font-size: 20px;"></i>
-                            </a>
-                            <p class="card-text">
-                                <b>
-                                    FullName:
-                                </b>
-                                {{add.last_name|capfirst}}
-                                {{add.first_name|capfirst}} 
-                            </p>
-                            
-                            <p class="card-text">
-                                <b>
-                                    Mobile:
-                                </b>
-                                {{add.mobile}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    Email:
-                                </b>
-                                {{add.email}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    Address:
-                                </b>
-                                {{add.address}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    City:
-                                </b>
-                                {{add.city}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    State:
-                                </b>
-                                {{add.state}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    Country:
-                                </b>
-                                {{add.country}}
-                            </p>
-                            <p class="card-text">
-                                <b>
-                                    Zipcode:
-                                </b>
-                                {{add.zip_code}}
-                            </p>
+            {% comment %} <img class="card-img-top" src="holder.js/100px180/" alt="Title" /> {% endcomment %}
+            <div class="card-body">
+                <h4 class="card-title">
+                    Shipping Address
+                </h4>
                 
+                <a href="{% url "customer:address_detail" add.id  %}" class="badge  bg-primary text-bg-primary">
+                    <i class="la la-edit text-white" style="font-size: 20px;"></i>
+                </a>
+                <a href="{% url "customer:address_delete" add.id  %}" class="badge  bg-danger text-bg-primary">
+                    <i class="la la-trash text-white" style="font-size: 20px;"></i>
+                </a>
+                <p class="card-text">
+                    <b>
+                        FullName:
+                    </b>
+                    {{add.last_name|capfirst}}
+                    {{add.first_name|capfirst}} 
+                </p>
+                
+                <p class="card-text">
+                    <b>
+                        Mobile:
+                    </b>
+                    {{add.mobile}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        Email:
+                    </b>
+                    {{add.email}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        Address:
+                    </b>
+                    {{add.address}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        City:
+                    </b>
+                    {{add.city}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        State:
+                    </b>
+                    {{add.state}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        Country:
+                    </b>
+                    {{add.country}}
+                </p>
+                <p class="card-text">
+                    <b>
+                        Zipcode:
+                    </b>
+                    {{add.zip_code}}
+                </p>
     
-                        </div>
-                    </div>
-                </div>
-                {% endfor %}
+
             </div>
-                
-            
-                
-            </div>
-            </div>
-		</div>
-	</div>
-	
-</body>
-<script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-<script src="{% static 'assets/js/core/popper.min.js' %}"></script>
-<script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chartist/chartist.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
-<script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-<script src="{% static 'assets/js/ready.min.js' %}"></script>
-{% comment %} <script src="{% static 'assets/js/demo.js' %}"></script> {% endcomment %}
-</html>	
+        </div>
+    </div>
+    {% endfor %}
+</div>
+{% endblock content %}

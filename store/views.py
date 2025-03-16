@@ -42,7 +42,7 @@ def index(request):
         if customer_profile.user_Type == "Customer":
             return redirect("customer:dashboard")
         elif customer_profile.user_Type == "Vendor":
-            return redirect("/")
+            return redirect("store:home")
         else:
             return HttpResponse("Create a profile")
     except:
@@ -143,7 +143,7 @@ def cart(request):
         
     if not items:
         messages.warning(request, "no items in cart")
-        return redirect("store:index")
+        return redirect("store:home")
     
     context = {
      "items":items,

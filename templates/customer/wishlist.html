@@ -1,106 +1,66 @@
+{% extends "./base.html" %}
 {% load static %}
+{% block content %}
+<div class="main-panel">
+<div class="content">
 
-<!DOCTYPE html>
-<html>
-<head>
-	{% comment %} <meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1" />
-     {% endcomment %}
-    <meta charset="utf-8">
-
-	<title>Ready Bootstrap Dashboard</title>
-	<meta content='width=device-width, initial-scale=1.0, maximum-scale=1.0, user-scalable=0, shrink-to-fit=no' name='viewport' />
-	<link rel="stylesheet" href="{% static 'assets/css/bootstrap.min.css' %}">
-	<link rel="stylesheet" href="https://fonts.googleapis.com/css?family=Nunito:200,200i,300,300i,400,400i,600,600i,700,700i,800,800i,900,900i">
-	<link rel="stylesheet" href="{% static 'assets/css/ready.css' %}">
-	<link rel="stylesheet" href="{% static 'assets/css/demo.css' %}">
-    <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/sweetalert2@11/dist/sweetalert2.min.css">
-    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
-</head>
-<body>
-    <div class="wrapper">
-		<div class="main-header">
-            {% include "customer/sidebar.html" %}
-            <div class="main-panel">
-            <div class="content">
-            
-                <h6>
-                  Wishlist  ({{wishlist_list.count}})
-                </h6>
-                    <div class="rows">
-                        {% for w in wishlist_list %}
-                        <div class="col-div">
-                                <div class="card ">
-                                    <div class="card-body ">
-                                            <div>
-                                                    <a href="{% url "store:product-detail" w.product.slug  %}">
-                                                        <img
-                                                        src="{{w.product.image.url}}"
-                                                        
-                                                        alt="image desc"
-                                                        width="100%"
-                                                    />
-                                                    </a>
-                                                    <br>
-                                                    <br>
-                                                <small class="card-text d-block">
-                                                    <span class="text-danger">
-                                                        Category:
-                                                    </span>
-                                                    {{w.product.category.title}}
-                                                </small>
-                                                <span class="card-text d-block">
-                                                   {{w.product.name}}
-                                                </span>
-                                            </div>
-    
-                                            <br>
-    
-                                            <div class="d-flex justify-content-between align-items-center">
-                                                <div>
-                                                    <i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i>
-                                                <p class="card-text fw-bold">
-                                                    ${{w.product.price}}
-                                                </p>
-                                                </div>
-    
-                                            </div>
-                                            <input type="hidden" name="" class="quantity" value="1">
-                                            <button class="btn btn-warning fw-bold add_to_cart" data-id="{{w.product.id}}">
-                                                Add to cart <i class="la la-shopping-cart"></i>
-                                            </button>
-
-                                            <a href="{% url "customer:delete_wishlist" w.id %}" class="card-text">
-                                                <i class="la la-trash text-danger" style="font-size: 30px;"></i>
-                                            </a>
-    
-                                
+    <h6>
+      Wishlist  ({{wishlist_list.count}})
+    </h6>
+        <div class="rows">
+            {% for w in wishlist_list %}
+            <div class="col-div">
+                    <div class="card ">
+                        <div class="card-body ">
+                                <div>
+                                        <a href="{% url "store:product-detail" w.product.slug  %}">
+                                            <img
+                                            src="{{w.product.image.url}}"
+                                            
+                                            alt="image desc"
+                                            width="100%"
+                                        />
+                                        </a>
+                                        <br>
+                                        <br>
+                                    <small class="card-text d-block">
+                                        <span class="text-danger">
+                                            Category:
+                                        </span>
+                                        {{w.product.category.title}}
+                                    </small>
+                                    <span class="card-text d-block">
+                                       {{w.product.name}}
+                                    </span>
                                 </div>
-                            </div>
-                            
-                    </div>
-                    {% endfor %}
-                </div>
+
+                                <br>
+
+                                <div class="d-flex justify-content-between align-items-center">
+                                    <div>
+                                        <i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i><i class="la la-star text-warning"></i>
+                                    <p class="card-text fw-bold">
+                                        ${{w.product.price}}
+                                    </p>
+                                    </div>
+
+                                </div>
+                                <input type="hidden" name="" class="quantity" value="1">
+                                <button class="btn btn-warning fw-bold add_to_cart" data-id="{{w.product.id}}">
+                                    Add to cart <i class="la la-shopping-cart"></i>
+                                </button>
+
+                                <a href="{% url "customer:delete_wishlist" w.id %}" class="card-text">
+                                    <i class="la la-trash text-danger" style="font-size: 30px;"></i>
+                                </a>
+
                     
-            </div>
-
+                    </div>
+                </div>
+                
         </div>
+        {% endfor %}
     </div>
-
-    <script src="{% static 'assets/js/core/jquery.3.2.1.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/jquery-ui-1.12.1.custom/jquery-ui.min.js' %}"></script>
-    <script src="{% static 'assets/js/core/popper.min.js' %}"></script>
-    <script src="{% static 'assets/js/core/bootstrap.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/chartist/chartist.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/chartist/plugin/chartist-plugin-tooltip.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/bootstrap-notify/bootstrap-notify.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/bootstrap-toggle/bootstrap-toggle.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/jquery-mapael/jquery.mapael.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/jquery-mapael/maps/world_countries.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/chart-circle/circles.min.js' %}"></script>
-    <script src="{% static 'assets/js/plugin/jquery-scrollbar/jquery.scrollbar.min.js' %}"></script>
-    <script src="{% static 'assets/js/ready.min.js' %}"></script>
-    <script type="module" src="{% static "js/functions.js" %}"></script>
-</body>
-
-{% comment %} <script src="{% static 'assets/js/demo.js' %}"></script> {% endcomment %}
-</html>	
+        
+</div>
+{% endblock content %}
