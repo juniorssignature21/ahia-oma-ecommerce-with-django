@@ -1,0 +1,60 @@
+<div class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <i class="fas fa-store"></i>
+        <span>VendorPro</span>
+      </div>
+      <ul class="nav flex-column mt-4">
+        <li class="nav-item">
+          <a
+            class="nav-link 
+            {% if request.path == "/vendor/dashboard/" %} active {% endif %}
+            "
+            href="{% url "vendor:dashboard" %}"
+          >
+            <i class="fas fa-home"></i>
+            <span>Dashboard</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link
+            {% if request.path == "/vendor/products/" %} active {% endif %}
+          
+          " href="{% url "vendor:products" %}">
+            <i class="fas fa-box"></i>
+            <span>Products</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link
+            {% if request.path == "/vendor/orders" %} active {% endif %}
+          " href="{% url "vendor:orders" %}">
+            <i class="fas fa-shopping-cart"></i>
+            <span>Orders</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showSection('customers')">
+            <i class="fas fa-users"></i>
+            <span>Customers</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showSection('analytics')">
+            <i class="fas fa-chart-line"></i>
+            <span>Analytics</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showSection('inventory')">
+            <i class="fas fa-warehouse"></i>
+            <span>Inventory</span>
+          </a>
+        </li>
+        <li class="nav-item">
+          <a class="nav-link" href="#" onclick="showSection('settings')">
+            <i class="fas fa-cog"></i>
+            <span>Settings</span>
+          </a>
+        </li>
+      </ul>
+    </div>

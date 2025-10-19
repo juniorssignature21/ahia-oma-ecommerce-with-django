@@ -223,7 +223,7 @@ GRAPH_MODELS ={
     'graph_models': True,
 }
 
-LOGIN_URL = "userauths:sign-in"
+LOGIN_URL = "user-auth:sign-in"
 LOGIN_REDIRECT_URL = ""
 LOGOUT_REDIRECT_URL = "userauths:sign-in"
 
@@ -487,5 +487,5 @@ CKEDITOR_5_CONFIGS = {
 }
 
 LOGIN_REDIRECT_URL = '/'  # Might cause a loop if `/` requires login and redirects back to login
-LOGIN_URL = '/userauths/login_user/'  # Make sure this is correct
+LOGIN_URL = '/user-auth/login_user/'  # Make sure this is correct
 SECURE_SSL_REDIRECT = False  # Set to False to avoid forced HTTPS redirection
