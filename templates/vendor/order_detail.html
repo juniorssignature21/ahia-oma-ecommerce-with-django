@@ -1,0 +1,564 @@
+{% extends "./base.html" %}
+{% load humanize %}
+{% block content %}
+<style>
+        :root {
+            --sidebar-width: 250px;
+            --header-height: 60px;
+        }
+
+        body {
+            font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+            background-color: #f8f9fa;
+        }
+
+        .sidebar {
+            position: fixed;
+            top: 0;
+            left: 0;
+            height: 100vh;
+            width: var(--sidebar-width);
+            background: linear-gradient(135deg, #667eea 0%, #764ba2 100%);
+            transition: all 0.3s;
+            z-index: 1000;
+            overflow-y: auto;
+        }
+
+        .sidebar.collapsed {
+            width: 70px;
+        }
+
+        .sidebar-header {
+            padding: 20px;
+            border-bottom: 1px solid rgba(255,255,255,0.1);
+            color: white;
+            font-weight: bold;
+            font-size: 1.2rem;
+        }
+
+        .sidebar.collapsed .sidebar-header span {
+            display: none;
+        }
+
+        .nav-item {
+            margin: 5px 0;
+        }
+
+        .nav-link {
+            color: rgba(255,255,255,0.8);
+            padding: 12px 20px;
+            border-radius: 8px;
+            margin: 0 10px;
+            transition: all 0.3s;
+            display: flex;
+            align-items: center;
+            gap: 10px;
+        }
+
+        .nav-link:hover, .nav-link.active {
+            background: rgba(255,255,255,0.2);
+            color: white;
+        }
+
+        .sidebar.collapsed .nav-link span {
+            display: none;
+        }
+
+        .main-content {
+            margin-left: var(--sidebar-width);
+            transition: all 0.3s;
+            min-height: 100vh;
+        }
+
+        .sidebar.collapsed ~ .main-content {
+            margin-left: 70px;
+        }
+
+        .top-header {
+            background: white;
+            height: var(--header-height);
+            box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+            position: sticky;
+            top: 0;
+            z-index: 999;
+        }
+
+        .detail-card {
+            background: white;
+            border-radius: 12px;
+            padding: 25px;
+            box-shadow: 0 2px 8px rgba(0,0,0,0.05);
+            margin-bottom: 20px;
+        }
+
+        .badge-status {
+            padding: 6px 15px;
+            border-radius: 20px;
+            font-size: 0.9rem;
+            font-weight: 500;
+        }
+
+        .toggle-sidebar {
+            cursor: pointer;
+            font-size: 1.2rem;
+            color: #667eea;
+        }
+
+        .notification-badge {
+            position: absolute;
+            top: -5px;
+            right: -5px;
+            background: #dc3545;
+            color: white;
+            border-radius: 50%;
+            width: 18px;
+            height: 18px;
+            font-size: 0.7rem;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+        }
+
+        .timeline {
+            position: relative;
+            padding-left: 30px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 9px;
+            top: 10px;
+            bottom: 10px;
+            width: 2px;
+            background: #e9ecef;
+        }
+
+        .timeline-item {
+            position: relative;
+            padding-bottom: 25px;
+        }
+
+        .timeline-item:last-child {
+            padding-bottom: 0;
+        }
+
+        .timeline-dot {
+            position: absolute;
+            left: -25px;
+            width: 20px;
+            height: 20px;
+            border-radius: 50%;
+            background: white;
+            border: 3px solid #10b981;
+            z-index: 1;
+        }
+
+        .timeline-dot.pending {
+            border-color: #6c757d;
+        }
+
+        .product-img {
+            width: 70px;
+            height: 70px;
+            border-radius: 8px;
+            background: #f8f9fa;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 1.8rem;
+            color: #6c757d;
+        }
+
+        .info-row {
+            display: flex;
+            justify-content: space-between;
+            padding: 12px 0;
+            border-bottom: 1px solid #f0f0f0;
+        }
+
+        .info-row:last-child {
+            border-bottom: none;
+        }
+
+        @media (max-width: 768px) {
+            .sidebar {
+                transform: translateX(-100%);
+            }
+
+            .sidebar.show {
+                transform: translateX(0);
+            }
+
+            .main-content {
+                margin-left: 0;
+            }
+
+            .sidebar.collapsed ~ .main-content {
+                margin-left: 0;
+            }
+        }
+</style>
+        
+<!-- Order Detail Content -->
+<div class="p-4">
+    <!-- Back Button & Header -->
+    <div class="mb-4">
+        <button class="btn btn-link text-decoration-none p-0 mb-3" onclick="window.history.back()">
+            <i class="fas fa-arrow-left me-2"></i>Back to Orders
+        </button>
+        <div class="d-flex flex-column flex-md-row justify-content-between align-items-start gap-3">
+            <div>
+                <h2 class="mb-1">Order Details</h2>
+                <p class="text-muted mb-0">
+                    Order <span class="fw-semibold text-primary">#{{order.order_id}}</span> • 
+                    Placed on {{order.date}}
+                </p>
+            </div>
+            <div class="d-flex gap-2 flex-wrap">
+                <button class="btn btn-outline-primary">
+                    <i class="fas fa-print me-2"></i>Print Invoice
+                </button>
+                <button class="btn btn-outline-secondary">
+                    <i class="fas fa-download me-2"></i>Download
+                </button>
+                <div class="dropdown">
+                    <button class="btn btn-outline-secondary dropdown-toggle" data-bs-toggle="dropdown">
+                        <i class="fas fa-ellipsis-v"></i>
+                    </button>
+                    <ul class="dropdown-menu dropdown-menu-end">
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-edit me-2"></i>Edit Order</a></li>
+                        <li><a class="dropdown-item" href="#"><i class="fas fa-redo me-2"></i>Resend Email</a></li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li><a class="dropdown-item text-danger" href="#"><i class="fas fa-trash me-2"></i>Cancel Order</a></li>
+                    </ul>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Status Timeline -->
+    <div class="detail-card">
+        <h5 class="mb-4"><i class="fas fa-truck me-2 text-primary"></i>Order Status</h5>
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">Order Placed</div>
+                        <small class="text-muted">Your order has been received</small>
+                    </div>
+                    <small class="text-muted">Oct 18, 10:30 AM</small>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">Payment Confirmed</div>
+                        <small class="text-muted">Payment received successfully</small>
+                    </div>
+                    <small class="text-muted">Oct 18, 10:35 AM</small>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">Processing</div>
+                        <small class="text-muted">Order is being prepared</small>
+                    </div>
+                    <small class="text-muted">Oct 18, 11:15 AM</small>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">Shipped</div>
+                        <small class="text-muted">Package handed to courier</small>
+                    </div>
+                    <small class="text-muted">Oct 18, 03:20 PM</small>
+                </div>
+            </div>
+            <div class="timeline-item">
+                <div class="timeline-dot"></div>
+                <div class="d-flex justify-content-between align-items-start">
+                    <div>
+                        <div class="fw-semibold">Delivered</div>
+                        <small class="text-muted">Package delivered successfully</small>
+                    </div>
+                    <small class="text-muted">Oct 19, 09:00 AM</small>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <div class="row g-4">
+        <!-- Customer Bio Data -->
+        <div class="col-12 col-lg-4">
+            <div class="detail-card h-100">
+                <h5 class="mb-4"><i class="fas fa-user me-2 text-primary"></i>Customer Information</h5>
+                <div class="d-flex align-items-center gap-3 mb-4 pb-3 border-bottom">
+                    <img src="https://ui-avatars.com/api/?name={{order.customer.profile.full_name}}&background=667eea&color=fff" class="rounded-circle" width="60" height="60">
+                    <div>
+                        <div class="fw-semibold fs-5">
+                            {{ order.customer.profile.full_name }}
+                        </div>
+                        <small class="text-muted">Customer since Jan 2023</small>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="text-muted small mb-1">Email Address</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-envelope text-primary"></i>
+                        <span>
+                            {{ order.customer.email }}
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-3">
+                    <div class="text-muted small mb-1">Phone Number</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-phone text-primary"></i>
+                        <span>
+                            {{ order.customer.profile.mobile }}
+                        </span>
+                    </div>
+                </div>
+                <div class="mb-4">
+                    <div class="text-muted small mb-1">Customer ID</div>
+                    <div class="d-flex align-items-center gap-2">
+                        <i class="fas fa-id-card text-primary"></i>
+                        <span class="font-monospace">#CUST-87456</span>
+                    </div>
+                </div>
+                <div class="d-flex gap-2">
+                    <button class="btn btn-sm btn-primary flex-fill">
+                        <i class="fas fa-user me-2"></i>View Profile
+                    </button>
+                    <button class="btn btn-sm btn-outline-primary flex-fill">
+                        <i class="fas fa-envelope me-2"></i>Message
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <!-- Shipping Address -->
+        <div class="col-12 col-lg-4">
+            <div class="detail-card h-100">
+                <h5 class="mb-4"><i class="fas fa-map-marker-alt me-2 text-primary"></i>Shipping Address</h5>
+                <div class="mb-3">
+                    <div class="d-flex align-items-center gap-2 mb-2">
+                        <i class="fas fa-home text-primary"></i>
+                        <strong>Home Address</strong>
+                    </div>
+                </div>
+                <div class="ms-4 mb-4">
+                    <div class="mb-1">
+                        <strong>{{ order.address.first_name }} {{ order.address.last_name }}</strong>
+                    </div>
+                    <div class="mb-1">
+                        Address 1: {{ order.address.address}}
+                        <br>
+                        {% if order.address.address2 %}
+                        Address 2: {{ order.address.address2}}
+                        {% else %}
+
+                        {% endif %}
+                    </div>
+                    <div class="mb-1">{{ order.address.city }}, {{ order.address.state}} {{ order.address.zip_code }}</div>
+                    <div class="mb-1">
+                        {{ order.address.country }}
+                    </div>
+                </div>
+                <div class="border-top pt-3">
+                    <div class="text-muted small mb-2">Tracking Information</div>
+                    <div class="d-flex align-items-center justify-content-between mb-2">
+                        <span class="small">Courier:</span>
+                        <strong>
+                            {% comment %} {{ order.order_item.f }} {% endcomment %}
+                        </strong>
+                    </div>
+                    <div class="d-flex align-items-center justify-content-between mb-3">
+                        <span class="small">Tracking Number:</span>
+                        <strong class="font-monospace small">FDX8956234871</strong>
+                    </div>
+                    <a href="#" class="btn btn-sm btn-outline-primary w-100">
+                        <i class="fas fa-external-link-alt me-2"></i>Track Shipment
+                    </a>
+                </div>
+            </div>
+        </div>
+
+        <!-- Order Summary -->
+        <div class="col-12 col-lg-4">
+            <div class="detail-card h-100">
+                <h5 class="mb-4"><i class="fas fa-receipt me-2 text-primary"></i>Order Summary</h5>
+                <div class="info-row">
+                    <span class="text-muted">Subtotal</span>
+                    <strong>$379.97</strong>
+                </div>
+                <div class="info-row">
+                    <span class="text-muted">Shipping Fee</span>
+                    <strong>$15.00</strong>
+                </div>
+                <div class="info-row">
+                    <span class="text-muted">Tax (10%)</span>
+                    <strong>$37.99</strong>
+                </div>
+                <div class="info-row">
+                    <span class="text-muted">Discount</span>
+                    <strong class="text-success">-$50.00</strong>
+                </div>
+                <div class="info-row border-top pt-3 mt-2">
+                    <span class="fw-semibold fs-5">Total</span>
+                    <strong class="text-primary fs-4">$382.96</strong>
+                </div>
+                <div class="mt-4 p-3 bg-light rounded">
+                    <div class="d-flex justify-content-between mb-2">
+                        <span class="small text-muted">Payment Method</span>
+                    </div>
+                    <div class="d-flex align-items-center gap-3">
+                        <div class="bg-white p-2 rounded">
+                            <i class="fab fa-cc-visa text-primary fs-4"></i>
+                        </div>
+                        <div>
+                            <div class="fw-semibold">Visa •••• 4242</div>
+                            <small class="text-muted">Expires 12/2025</small>
+                        </div>
+                    </div>
+                    <div class="mt-2">
+                        <span class="badge bg-success">Paid</span>
+                        <small class="text-muted ms-2">Oct 18, 10:35 AM</small>
+                    </div>
+                </div>
+                <div class="mt-3">
+                    <small class="text-muted">Transaction ID:</small>
+                    <div class="font-monospace small">TXN-2547-A8B9C0D1E2F3</div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Products Ordered -->
+    <div class="detail-card mt-4">
+        <h5 class="mb-4"><i class="fas fa-box-open me-2 text-primary"></i>Products Ordered</h5>
+        <div class="table-responsive">
+            <table class="table align-middle">
+                <thead class="table-light">
+                    <tr>
+                        <th>Product</th>
+                        <th>Price</th>
+                        <th>Vendor</th>
+                        <th>Quantity</th>
+                        <th>Status</th>
+                        <th>Total</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in order.order_item.all %}
+                        <tr>
+                            <td>
+                                <div class="d-flex align-items-center gap-3">
+                                    <div class="product-img">
+                                        <i class="fas fa-headphones"></i>
+                                    </div>
+                                    <div>
+                                        <div class="fw-semibold">
+                                            {{ item.product.name }}
+                                        </div>
+                                        <small class="text-muted">SKU: {{ item.product.slug }}</small>
+                                        <div class="small text-muted">Color: Black, Size: Standard</div>
+                                    </div>
+                                </div>
+                            </td>
+                            <td class="fw-semibold">&#8358;{{ item.product.price }}</span></td>
+                            <td>
+                                <div class="small">
+                                    {{ item.vendor.first_name|title }} {{ item.vendor.last_name|title }}
+                                </div>
+                                <small class="text-muted">Vendor ID: #V-1234</small>
+                            </td>
+                            <td>
+                                <span class="badge bg-secondary">x {{ item.qty }}</span>
+                            </td>
+                            <td>
+                                <span class="badge-status bg-success text-white">
+                                    {{ item.order_status }}
+                                </span>
+                            </td>
+                            <td class="fw-bold text-primary">
+                                &#8358;{{ item.price }}
+                            </td>
+                        </tr>
+                    {% endfor %}
+                    
+                </tbody>
+                <tfoot class="border-top">
+                    <tr>
+                        <td colspan="5" class="text-end fw-semibold">Subtotal:</td>
+                        <td class="fw-bold text-primary">
+                            &#8358;{{ order.sub_total|intcomma }}
+                        </td>
+                    </tr>
+                </tfoot>
+            </table>
+        </div>
+    </div>
+
+    <!-- Additional Actions -->
+    <div class="detail-card mt-4">
+        <h5 class="mb-4"><i class="fas fa-tasks me-2 text-primary"></i>Order Actions</h5>
+        <div class="row g-3">
+            <div class="col-12 col-md-4">
+                <button class="btn btn-outline-primary w-100">
+                    <i class="fas fa-redo me-2"></i>Resend Confirmation Email
+                </button>
+            </div>
+            <div class="col-12 col-md-4">
+                <button class="btn btn-outline-info w-100">
+                    <i class="fas fa-comment-alt me-2"></i>Add Note to Order
+                </button>
+            </div>
+            <div class="col-12 col-md-4">
+                <button class="btn btn-outline-warning w-100">
+                    <i class="fas fa-undo me-2"></i>Initiate Return
+                </button>
+            </div>
+        </div>
+    </div>
+
+    <!-- Order Notes -->
+    <div class="detail-card mt-4">
+        <h5 class="mb-4"><i class="fas fa-sticky-note me-2 text-primary"></i>Order Notes</h5>
+        <div class="border rounded p-3 mb-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="https://ui-avatars.com/api/?name=John+Doe&background=667eea&color=fff" class="rounded-circle" width="30" height="30">
+                    <strong>John Doe (Admin)</strong>
+                </div>
+                <small class="text-muted">Oct 18, 2025 - 11:30 AM</small>
+            </div>
+            <p class="mb-0">Customer requested expedited shipping. Processed with priority delivery.</p>
+        </div>
+        <div class="border rounded p-3">
+            <div class="d-flex justify-content-between align-items-start mb-2">
+                <div class="d-flex align-items-center gap-2">
+                    <img src="https://ui-avatars.com/api/?name=Sarah+Connor&background=random" class="rounded-circle" width="30" height="30">
+                    <strong>Sarah Connor (Customer)</strong>
+                </div>
+                <small class="text-muted">Oct 18, 2025 - 10:45 AM</small>
+            </div>
+            <p class="mb-0">Please deliver after 5 PM. Thank you!</p>
+        </div>
+        <div class="mt-3">
+            <textarea class="form-control" rows="3" placeholder="Add a new note..."></textarea>
+            <button class="btn btn-primary mt-2">
+                <i class="fas fa-plus me-2"></i>Add Note
+            </button>
+        </div>
+    </div>
+</div>
+{% endblock content %}
+

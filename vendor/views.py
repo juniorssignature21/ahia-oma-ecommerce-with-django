@@ -51,7 +51,7 @@ def products(request):
 
 @login_required
 def orders(request):
-    orders = store_models.Order.objects.filter(vendors=request.user, payment_status="Paid")
+    orders = store_models.Order.objects.filter(vendors=request.user)
     
     context = {
         "orders": orders,
@@ -61,7 +61,7 @@ def orders(request):
 
 @login_required
 def order_detail(request, order_id):
-    order = store_models.Order.objects.get(vendors=request.user,order_id=order_id, payment_status="Paid")
+    order = store_models.Order.objects.get(vendors=request.user,order_id=order_id)
     
     context = {
         "order": order,
